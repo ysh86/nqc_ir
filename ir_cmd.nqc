@@ -1,0 +1,51 @@
+#define MOTOR_L OUT_A
+#define MOTOR_R OUT_C
+
+sub go_fwd()
+{
+    SetDirection(MOTOR_L + MOTOR_R, OUT_FWD);
+}
+sub turn_right()
+{
+    SetDirection(MOTOR_L, OUT_FWD);
+    SetDirection(MOTOR_R, OUT_REV);
+}
+sub turn_left()
+{
+    SetDirection(MOTOR_L, OUT_REV);
+    SetDirection(MOTOR_R, OUT_FWD);
+}
+sub stop_motors()
+{
+    SetOutput(MOTOR_L + MOTOR_R, OUT_OFF);
+}
+
+
+task main()
+{
+    go_fwd();
+    SetOutput(MOTOR_L + MOTOR_R, OUT_ON);
+
+    //SetEvent(0, Message(), EVENT_TYPE_MESSAGE);
+    while (1) {
+        ClearMessage();
+        until(Message() > 0);
+
+        switch (Message()) {
+            case 1:
+                go_fwd();
+                break;
+            case 2:
+                turn_right();
+                break;
+            case 3:
+                turn_left();
+                break;
+            case 4:
+                stop_motors();
+                break;
+            default:
+                break;
+        }
+    }
+}
